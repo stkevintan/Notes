@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    ASP.NET MVC4笔记（一） 扩展Simplemembership | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/asp-net-mvc4-note1-simplemembership/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>ASP.NET MVC4笔记（一） 扩展Simplemembership</h1>
+      <div class="meta">
+        Feb 24, 2015 &nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <pre><code class="language-C#">using System.Web.Mvc;
+
+namespace MvcClassManageSystem.ActionFilters
+{
+    public class LogStateFilterAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            //string controller = filterContext.RouteData.Values[&quot;controller&quot;].ToString();
+            //string action = filterContext.RouteData.Values[&quot;action&quot;].ToString();
+            //System.Diagnostics.Debug.WriteLine(&quot;OnAction:&quot; + controller + &quot;/&quot; + action);
+
+            if (WebMatrix.WebData.WebSecurity.IsAuthenticated == true)
+            {
+                filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = &quot;Home&quot;, action = &quot;Index&quot; }));
+            }
+        }
+    }
+}
+</code></pre>
+
+<p></p>
+
+<pre><code class="language-C#">public static class WebUtility
+    {
+        private static SimpleMembershipProvider membership = (SimpleMembershipProvider)Membership.Provider;
+        public static void CreateUserAndAccount(UserProfile userProfile, string Password)
+        {
+            WebSecurity.CreateUserAndAccount(userProfile.UserName, Password, new
+            {
+                //TO DO 数据库/模型更改之后别忘记修改此处！！！
+                ClassId = userProfile.ClassId,
+                UserExtraInfo_Phone = userProfile.UserExtraInfo.Phone,
+                UserExtraInfo_Gender = userProfile.UserExtraInfo.Gender,
+                UserExtraInfo_BirthDay = userProfile.UserExtraInfo.BirthDay,
+                UserExtraInfo_UserDesc = userProfile.UserExtraInfo.UserDesc
+            });
+        }
+        public static void DeleteUserAndAccount(string UserName)
+        {
+            membership.DeleteAccount(UserName);
+            Roles.RemoveUserFromRoles(UserName, Roles.GetRolesForUser(UserName));
+            membership.DeleteUser(UserName, true);
+        }
+        public static void ResetPassword(string UserName, string NewPassword)
+        {
+            WebSecurity.ResetPassword(WebSecurity.GeneratePasswordResetToken(UserName, 1), NewPassword);
+        }
+    }
+</code></pre>
+
+<pre><code class="language-C#">using System.Web.Mvc;
+namespace MvcClassManageSystem.Filters
+{
+    public class MyAuthorizeAttribute : AuthorizeAttribute
+    {
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            base.HandleUnauthorizedRequest(filterContext);
+            if (filterContext.HttpContext.User.Identity.IsAuthenticated)
+            {
+                filterContext.Result = new RedirectResult(&quot;/Account/AccessError&quot;);
+            }
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="language-C#">using System.Data.Entity;
+using System.Linq;
+using System.Web.Security;
+using WebMatrix.WebData;
+namespace MvcClassManageSystem.Models
+{
+    public class InitSecurityDb : DropCreateDatabaseAlways&lt;DBManager&gt;
+    {
+        protected override void Seed(DBManager context)
+        {
+            WebSecurity.InitializeDatabaseConnection(&quot;DefaultConnection&quot;, &quot;UserProfile&quot;, &quot;UserId&quot;, &quot;UserName&quot;, autoCreateTables: true);
+            var roles = (SimpleRoleProvider)Roles.Provider;
+ 
+            string[] RolesList = new string[] { &quot;Admin&quot;, &quot;Teacher&quot;, &quot;Student&quot; };
+            foreach (var item in RolesList)
+            {
+                if (!roles.RoleExists(item))
+                {
+                    roles.CreateRole(item);
+                }
+            }
+            //设置初始班级
+            int ClassIndex = 0;
+            using (var db = new DBManager())
+            {
+                var ret = db.ClassProfiles.SingleOrDefault(m =&gt; m.ClassName.CompareTo(&quot;未知班级&quot;) == 0);
+                if (ret == null)
+                {
+                    ret = db.ClassProfiles.Add(new ClassProfile
+                    {
+                        ClassName = &quot;未知班级&quot;,
+                        Desc = &quot;班级未知或无意义&quot;
+                    });
+                    db.SaveChanges();
+                }
+                ClassIndex = ret.ClassId;
+            }
+            if (!WebSecurity.UserExists(&quot;管理员&quot;))
+            {
+                WebUtility.CreateUserAndAccount(new UserProfile()
+                {
+                    UserName = &quot;管理员&quot;,
+                    ClassId = ClassIndex,
+                    UserExtraInfo = new UserExtraInfo()
+                    {
+                        Phone = &quot;18267912632&quot;,
+                        Gender = MvcClassManageSystem.Models.Gender.男,
+                        BirthDay = new System.DateTime(1993, 9, 28),
+                        UserDesc = &quot;本站的管理员！&quot;
+                    }
+                }, &quot;admin&quot;);
+                System.Web.Security.Roles.AddUserToRole(&quot;管理员&quot;, &quot;Admin&quot;);
+            }
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="language-C#"> protected void Application_Start()
+        {
+            Database.SetInitializer&lt;DBManager&gt;(new InitSecurityDb());
+            DBManager db = new DBManager();
+            db.Database.Initialize(true);
+            if (!WebSecurity.Initialized)
+            {
+                WebSecurity.InitializeDatabaseConnection(&quot;DefaultConnection&quot;, &quot;UserProfile&quot;, &quot;UserId&quot;, &quot;UserName&quot;, autoCreateTables: true);
+            }
+
+            AreaRegistration.RegisterAllAreas();
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AuthConfig.RegisterAuth();
+        }
+</code></pre>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/zoj-month-contest-d-determinant-and-matrix/" rel="prev">ZOJ month contest D.Determinant and Matrix</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/asp-net-mvc4note2/" rel="next">ASP.NET MVC 4笔记（二）</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

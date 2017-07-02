@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    内网2073 城主GeassCode | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/zjnu2073-geasscode/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>内网2073 城主GeassCode</h1>
+      <div class="meta">
+        Aug 2, 2014 &nbsp;
+        
+          #<a href="/tags/lca">LCA</a>&nbsp;
+        
+          #<a href="/tags/%E5%9B%BE%E8%AE%BA">图论</a>&nbsp;
+        
+          #<a href="/tags/tarjan">tarjan</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>##Description</p>
+
+<p>GeassCode凭借自己在topcoder上的超凡表现，赢得了国王的喜爱，国王赏赐他一座城池。这座城池里有n个 村子，m条路连接这些村子。坐上城主的GeassCode决定要修路，他打算用最少的代价把所以的村子连在一起。据探子回报，有些村子之间虽然原来没有路 径，但是可以强行的去建一条路。GeassCode想知道，如果强行在某两个村子之间建一条路，最后的总花费是多少？</p>
+
+<p></p>
+
+<p>##Input</p>
+
+<p>输入一行三个整数n，m，表示有n个村子，m条可建路径。</p>
+
+<p>2..m+1行，每行3个整数a,b,c（a≠b），表示可以在a和b村庄建一条花费为c的路径。</p>
+
+<p>第m+2行一个整数q，表示有多少个询问。</p>
+
+<p>接下来q个询问，每行3个整数a,b,c（a≠b），表示如果可以另外在a和b村庄建一条花费为c的路径，最终需要多少花费？</p>
+
+<p>##Output</p>
+
+<p>对于每个询问输出，输出最少的花费。</p>
+
+<p>##Sample Input
+4 5 1 2 4 2 3 3 1 4 6 2 4 3 1 3 2 3 3 4 3 1 3 1 1 4 2</p>
+
+<p>##Sample Output
+8 7 7</p>
+
+<p>##Hint
+n的范围[2,50000],m的范围[2,100000],q的范围[1,50000]。</p>
+
+<p>输入的m条边保证可以把所有村庄连在一起。输入的边权范围[1,10<sup>6</sup>]</p>
+
+<p>##Source</p>
+
+<p>张超
+<br/></p>
+
+<hr />
+
+<p>解法是如果可以在(u,v)上再加条边，则将最小生成树上的(u,v)节点最短路径中的最大边权与要加上这条边的替换。如果新的花费比旧的花费少，则取新的花费。否则什么也不换，取旧的花费。</p>
+
+<p>如何求树上两点之间的最短路径中的最大边权呢？</p>
+
+<p>可以按照这篇文章所述建一个类似于哈夫曼树，将点作为叶子，边的权值作为祖先构造一个N+N的树：<a href="http://blog.sina.com.cn/s/blog_51cea4040100ss3n.html">click here</a></p>
+
+<p>这样写的很容易错，尤其要区分两颗树的规模，我在这上面错了很久。</p>
+
+<pre><code class="language-C++">#include&amp;lt;map&amp;gt;
+#include&amp;lt;set&amp;gt;
+#include&amp;lt;stack&amp;gt;
+#include&amp;lt;queue&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;vector&amp;gt;
+#include&amp;lt;cctype&amp;gt;
+#include&amp;lt;cassert&amp;gt;
+#include&amp;lt;utility&amp;gt;
+#include&amp;lt;numeric&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+#include&amp;lt;algorithm&amp;gt;
+using namespace std;
+#define pr pair
+#define MP make_pair
+#define SI(x) set&amp;lt;x&amp;gt;::iterator
+#define VI(x) vector&amp;lt;x&amp;gt;::iterator
+#define MI(x,y) map&amp;lt;x,y&amp;gt;::iterator
+#define SRI(x) set&amp;lt;x&amp;gt;::reverse_iterator
+#define VRI(x) vector&amp;lt;x&amp;gt;::reverse_iterator
+#define MRI(x,y) map&amp;lt;x,y&amp;gt;::reverse_iterator
+#define F first
+#define S second
+#define clrQ(x) while(!x.empty)x.pop();
+#define clrA(x,y) memset(x,y,sizeof(x));
+#if defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__)
+#define LL __int64
+#define LLS &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#else
+#define LL long long
+#define LLS &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#endif
+const int inf = ~0u &amp;gt;&amp;gt; 1;
+const LL lnf = ~0ull &amp;gt;&amp;gt; 1;
+#define N 50005
+#define M 100005
+int n, m ;
+struct Graph {
+    int u, v, w;
+    bool mark;
+    bool operator&amp;lt;(Graph othr) const {
+        return w &amp;lt; othr.w;
+    }
+} g[M];
+//UnionSet
+int p[N + N];
+void initUset(int n) {
+    for (int i = 0; i &amp;lt;= n; i++)
+        p[i] = i;
+}
+int uFind(int x) {
+    return x == p[x] ? p[x] : p[x] = uFind(p[x]);
+}
+void uMerge(int x, int y) { //y合并到x
+    int fx = uFind(x);
+    int fy = uFind(y);
+    if (fx != fy) p[fy] = fx;
+}
+//Edge Graph
+int head[N + N], pos;
+struct Edge {
+    int v, nxt;
+} e[N + N];
+void initEdge() {
+    memset(head, -1, sizeof(head));
+    pos = 0;
+}
+void add(int u, int v) {
+    e[pos].v = v;
+    e[pos].nxt = head[u];
+    head[u] = pos++;
+}
+int size;
+vector&amp;lt;pr&amp;lt;int, int&amp;gt; &amp;gt; query[N];
+int qw[N];
+bool vis[N];
+int lca[N];
+int val[N + N];
+int dfs(int u) {
+    int solved = 0;
+    for (int i = head[u]; ~i; i = e[i].nxt) {
+        int v = e[i].v;
+        solved += dfs(v);
+        if (size == solved) return solved;
+        uMerge(u, v);
+    }
+    if(~val[u])return solved;
+    vis[u] = 1;
+    for (int i = 0; i &amp;lt; (int) query[u].size(); i++) {
+        int v = query[u][i].F;
+        if (vis[v]) {
+            solved++;
+            lca[query[u][i].S] = uFind(v);
+        }
+    }
+    return solved;
+}
+void tarjan() {
+    initUset(n);
+    clrA(vis, 0);
+    dfs(n);
+}
+void rebuild() {
+    clrA(val, -1);
+    initUset(n + n);
+    initEdge();
+    for (int i = 1; i &amp;lt;= m; i++) {
+        if (g[i].mark == false) continue;
+        val[++n] = g[i].w;
+        int fu = uFind(g[i].u);
+        int fv = uFind(g[i].v);
+        p[fu] = n;
+        p[fv] = n;
+        add(n, fu);
+        add(n, fv);
+    }
+}
+int main() {
+    while (~scanf(&quot;%d%d&quot;, &amp;amp;n, &amp;amp;m)) {
+        for (int i = 1; i &amp;lt;= m; i++) {
+            scanf(&quot;%d%d%d&quot;, &amp;amp;g[i].u, &amp;amp;g[i].v, &amp;amp;g[i].w);
+            g[i].mark = false;
+        }
+        sort(g + 1, g + 1 + m);
+        initUset(n);
+        LL sum = 0;
+        for (int i = 1; i &amp;lt;= m; i++) {
+            int fx = uFind(g[i].u);
+            int fy = uFind(g[i].v);
+            if (fx != fy) {
+                sum += g[i].w;
+                g[i].mark = true;
+                p[fy] = fx;
+            }
+        }
+        for (int i = 1; i &amp;lt;= n; i++)
+            query[i].clear();
+        scanf(&quot;%d&quot;, &amp;amp;size);
+        int u, v, w;
+        for (int i = 1; i &amp;lt;= size; i++) {
+            scanf(&quot;%d%d%d&quot;, &amp;amp;u, &amp;amp;v, &amp;amp;w);
+            qw[i] = w;
+            query[u].push_back(MP(v, i));
+            query[v].push_back(MP(u, i));
+        }
+        rebuild();
+        tarjan();
+        for (int i = 1; i &amp;lt;= size; i++) {
+            LL ans = sum - val[lca[i]] + qw[i];
+            printf(LLS&quot;\n&quot;, min(ans, sum));
+        }
+    }
+}
+</code></pre>
+
+<p>其实，可以直接在dfs的回溯过程中将子节点的max求出来。这样简单多了。感叹一句：并查集真神奇！</p>
+
+<pre><code class="language-C++">#include&amp;lt;map&amp;gt;
+#include&amp;lt;set&amp;gt;
+#include&amp;lt;stack&amp;gt;
+#include&amp;lt;queue&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;vector&amp;gt;
+#include&amp;lt;cctype&amp;gt;
+#include&amp;lt;cassert&amp;gt;
+#include&amp;lt;utility&amp;gt;
+#include&amp;lt;numeric&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+#include&amp;lt;algorithm&amp;gt;
+using namespace std;
+#define pr pair&amp;lt;int,int&amp;gt;
+#define MP make_pair
+#define SI(x) set&amp;lt;x &amp;gt;::iterator
+#define VI(x) vector&amp;lt;x &amp;gt;::iterator
+#define MI(x,y) map&amp;lt;x,y &amp;gt;::iterator
+#define SRI(x) set&amp;lt;x &amp;gt;::reverse_iterator
+#define VRI(x) vector&amp;lt;x &amp;gt;::reverse_iterator
+#define MRI(x,y) map&amp;lt;x,y &amp;gt;::reverse_iterator
+#define F first
+#define S second
+#define clrQ(x) while(!x.empty())x.pop();
+#define clrA(x,y) memset(x,y,sizeof(x));
+#if defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__)
+#define LL __int64
+#define LLS &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#else
+#define LL long long
+#define LLS &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#endif
+const int inf = ~0u &amp;gt;&amp;gt; 1;
+const LL lnf = ~0ull &amp;gt;&amp;gt; 1;
+#define N 50005
+#define M 100005
+int n, m;
+struct Graph {
+    int u, v, w;
+    bool operator&amp;lt;(Graph othr) const {
+        return w &amp;lt; othr.w;
+    }
+} g[M];
+struct Pair {
+    int x, y;
+    Pair(int x, int y) :
+            x(x), y(y) {
+    }
+    ;
+};
+//Edge Graph
+int head[N], pos;
+struct Edge {
+    int v, w, nxt;
+} e[N &amp;lt;&amp;lt; 1];
+void initEdge() {
+    memset(head, -1, sizeof(head));
+    pos = 0;
+}
+void add(int u, int v, int w) {
+    e[pos].v = v;
+    e[pos].w = w;
+    e[pos].nxt = head[u];
+    head[u] = pos++;
+}
+//UnionSet
+int p[N];
+int pmax[N];
+void initUset() {
+    for (int i = 0; i &amp;lt;= n; i++)
+        p[i] = i;
+}
+int uFind(int x) {
+    if (x != p[x]) {
+        int t = p[x];
+        p[x] = uFind(p[x]);
+        pmax[x] = max(pmax[x], pmax[t]);
+        return p[x];
+    }
+    return x;
+}
+void uMerge(int x, int y) { //y合并到x
+    int fx = uFind(x);
+    int fy = uFind(y);
+    if (fx != fy) {
+        p[fy] = fx;
+        pmax[fy] = max(pmax[fy], pmax[fx]);
+    }
+}
+int size;
+vector&amp;lt;Pair&amp;gt; query[N];
+vector&amp;lt;Pair&amp;gt; mark[N];
+int qw[N];
+bool vis[N];
+int lca[N];
+void dfs(int u, int fa) {
+    if (size == 0) return;
+    for (int i = head[u]; ~i; i = e[i].nxt) {
+        int v = e[i].v;
+        if (v == fa) continue;
+        dfs(v, u);
+        pmax[v] = max(pmax[v], e[i].w);
+        uMerge(u, v);
+    }
+    vis[u] = 1;
+    for (int i = 0; i &amp;lt; (int) query[u].size(); i++) {
+        int v = query[u][i].x;
+        if (vis[v]) {
+            mark[uFind(v)].push_back(Pair(u, i));
+        }
+    }
+    if (!mark[u].empty()) {
+        for (VI(Pair)it=mark[u].begin();it!=mark[u].end();++it) {
+            int uu = it-&amp;gt;x;
+            int vv = query[it-&amp;gt;x][it-&amp;gt;y].x;
+            int ss = query[it-&amp;gt;x][it-&amp;gt;y].y;
+            uFind(uu);
+            uFind(vv);
+            lca[ss] = max(pmax[uu], pmax[vv]);
+            size--;
+        }
+        mark[u].clear();
+    }
+}
+int findRoot() {
+    for (int i = 1; i &amp;lt;= n; i++) {
+        if (!vis[i]) return i;
+    }
+    return assert(false), -1;
+}
+void tarjan() {
+    initUset();
+    clrA(vis, 0);
+    clrA(pmax, 0);
+    size = m;
+    dfs(findRoot(), -1);
+}
+int main() {
+    while (~scanf(&quot;%d%d&quot;, &amp;amp;n, &amp;amp;m)) {
+        for (int i = 1; i &amp;lt;= m; i++) {
+            scanf(&quot;%d%d%d&quot;, &amp;amp;g[i].u, &amp;amp;g[i].v, &amp;amp;g[i].w);
+        }
+        sort(g + 1, g + 1 + m);
+        initUset();
+        initEdge();
+        LL sum = 0;
+        for (int i = 1; i &amp;lt;= m; i++) {
+            int fx = uFind(g[i].u);
+            int fy = uFind(g[i].v);
+            if (fx != fy) {
+                sum += g[i].w;
+                add(g[i].u, g[i].v, g[i].w);
+                add(g[i].v, g[i].u, g[i].w);
+                p[fy] = fx;
+            }
+        }
+        for (int i = 1; i &amp;lt;= n; i++) {
+            query[i].clear();
+            mark[i].clear();
+        }
+        scanf(&quot;%d&quot;, &amp;amp;m);
+        int u, v, w;
+        for (int i = 1; i &amp;lt;= m; i++) {
+            scanf(&quot;%d%d%d&quot;, &amp;amp;u, &amp;amp;v, &amp;amp;w);
+            qw[i] = w;
+            query[u].push_back(Pair(v, i));
+            query[v].push_back(Pair(u, i));
+        }
+        tarjan();
+        for (int i = 1; i &amp;lt;= m; i++) {
+            LL tmp = sum - lca[i] + qw[i];
+            printf(LLS&quot;\n&quot;, min(tmp, sum));
+        }
+    }
+}
+</code></pre>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/poj1989-distance-queries/" rel="prev">POJ1989 Distance Queries</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/github-tips/" rel="next">github使用札记</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

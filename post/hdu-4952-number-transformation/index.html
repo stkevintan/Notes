@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    HDU 4952 Number Transformation | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/hdu-4952-number-transformation/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>HDU 4952 Number Transformation</h1>
+      <div class="meta">
+        Aug 16, 2014 &nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p><strong><span style="font-family: Arial; font-size: 12px; font-weight: bold; color: green;">Time Limit: <sup>2000</sup>&frasl;<sub>1000</sub> MS (Java/Others)    Memory Limit: <sup>65536</sup>&frasl;<sub>65536</sub> K (Java/Others)
+Total Submission(s): 612    Accepted Submission(s): 310
+</span></strong>
+<div class="panel_title" align="left">Problem Description</div>
+<div class="panel_content">Teacher Mai has an integer x.</p>
+
+<p>He does the following operations k times. In the i-th operation, x becomes the least integer no less than x, which is the multiple of i.</p>
+
+<p>He wants to know what is the number x now.</div>
+<div class="panel_bottom"></div>
+
+&nbsp;</p>
+
+<p><div class="panel_title" align="left">Input</div>
+<div class="panel_content">There are multiple test cases, terminated by a line &ldquo;0 0&rdquo;.</p>
+
+<p>For each test case, the only one line contains two integers x,k(1&lt;=x&lt;=10^10, 1&lt;=k&lt;=10^10).</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Output</div>
+<div class="panel_content">For each test case, output one line &ldquo;Case #k: x&rdquo;, where k is the case number counting from 1.</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Sample Input</div>
+<div class="panel_content">
+<div style="font-family: Courier New,Courier,monospace;">2520 10 2520 20 0 0</div>
+</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Sample Output</div>
+<div class="panel_content">
+<div style="font-family: Courier New,Courier,monospace;">Case #1: 2520 Case #2: 2600</div>
+</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Source</div>
+<div class="panel_content"><a href="http://acm.hdu.edu.cn/search.php?field=problem&amp;amp;key=2014%20Multi-University%20Training%20Contest%208&amp;amp;source=1&amp;amp;searchmode=source"> 2014 Multi-University Training Contest 8 </a></div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Recommend</div>
+<div class="panel_content">hujie   |   We have carefully selected several similar problems for you:  <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4955">4955</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4954">4954</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4953">4953</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4951">4951</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4950">4950</a></div>
+<br/></p>
+
+<hr />
+
+<pre><code class="language-C++">#include&amp;lt;map&amp;gt;
+#include&amp;lt;set&amp;gt;
+#include&amp;lt;cmath&amp;gt;
+#include&amp;lt;stack&amp;gt;
+#include&amp;lt;queue&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;vector&amp;gt;
+#include&amp;lt;cctype&amp;gt;
+#include&amp;lt;cassert&amp;gt;
+#include&amp;lt;utility&amp;gt;
+#include&amp;lt;numeric&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+#include&amp;lt;algorithm&amp;gt;
+using namespace std;
+#define pr pair
+#define PR pair&amp;lt;int,int&amp;gt;
+#define MP make_pair
+#define SI(x) set&amp;lt;x&amp;gt;::iterator
+#define VI(x) vector&amp;lt;x&amp;gt;::iterator
+#define MI(x,y) map&amp;lt;x,y&amp;gt;::iterator
+#define SRI(x) set&amp;lt;x&amp;gt;::reverse_iterator
+#define VRI(x) vector&amp;lt;x&amp;gt;::reverse_iterator
+#define MRI(x,y) map&amp;lt;x,y&amp;gt;::reverse_iterator
+#define F first
+#define S second
+#define Sz(x) (int)x.size()
+#define clrQ(x) while(!x.empty)x.pop();
+#define clr(x,y) memset(x,y,sizeof(x));
+#if defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__)
+#define LL __int64
+#define LLS &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#else
+#define LL long long
+#define LLS &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#endif
+const int inf = ~0u &amp;gt;&amp;gt; 1;
+const LL lnf = ~0ull &amp;gt;&amp;gt; 1;
+/*start*/
+int __;
+#define type LL
+inline type getint() {
+    type ret=0;bool ok=0;
+    for(;;) {
+        int c=getchar();
+        if(c&amp;gt;='0'&amp;amp;&amp;amp;c&amp;lt;='9')ret=(ret&amp;lt;&amp;lt;3)+ret+ret+c-'0',ok=1;
+        else if(ok)return ret;
+    }
+}
+#undef type
+int main(int argc, char **argv) {
+    LL x, k;
+    while (1) {
+        x=getint();
+        k=getint();
+        if (x == 0 &amp;amp;&amp;amp; k == 0) break;
+        for(int i=1;i&amp;lt;k;i++){
+            if(x&amp;lt;i+1)break;
+            x-=x/(i+1);
+        }
+        printf(&quot;Case #%d: &quot;LLS&quot;\n&quot;,++__,x*k);
+    }
+}
+</code></pre>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/hdu-4945-2048/" rel="prev">HDU 4945 2048</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/_tired/" rel="next">tired</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    HDU4944 FSF’s game | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/hdu4944-fsfs-game/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>HDU4944 FSF’s game</h1>
+      <div class="meta">
+        Aug 13, 2014 &nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p><strong><span style="font-family: Arial; font-size: 12px; font-weight: bold; color: green;">Time Limit: <sup>9000</sup>&frasl;<sub>4500</sub> MS (Java/Others)    Memory Limit: <sup>131072</sup>&frasl;<sub>131072</sub> K (Java/Others)
+Total Submission(s): 166    Accepted Submission(s): 76
+</span></strong>
+<div class="panel_title" align="left">Problem Description</div>
+<div class="panel_content">FSF has programmed a game.
+In this game, players need to divide a rectangle into several same squares.
+The length and width of rectangles are integer, and of course the side length of squares are integer.</p>
+
+<p>After division, players can get some coins.
+If players successfully divide a AxB rectangle(length: A, width: B) into KxK squares(side length: K), they can get A*B/ gcd(A/K,B/K) gold coins.
+In a level, you can’t get coins twice with same method.
+(For example, You can get 6 coins from 2x2(A=2,B=2) rectangle. When K=1, A*B/gcd(A/K,B/K)=2; When K=2, A<em>B/gcd(A/K,B/K)=4; 2+4=6; )
+
+There are N</em>(N+1)/2 levels in this game, and every level is an unique rectangle. (1x1 , 2x1, 2x2, 3x1, &hellip;, Nx(N-1), NxN)</p>
+
+<p>FSF has played this game for a long time, and he finally gets all the coins in the game.
+Unfortunately ,he uses an UNSIGNED 32-BIT INTEGER variable to count the number of coins.
+This variable may overflow.
+We want to know what the variable will be.
+(In other words, the number of coins mod 2^32)</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Input</div>
+<div class="panel_content">There are multiply test cases.</p>
+
+<p>The first line contains an integer T(T&lt;=500000), the number of test cases</p>
+
+<p>Each of the next T lines contain an integer N(N&lt;=500000).</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Output</div>
+<div class="panel_content">Output a single line for each test case.</p>
+
+<p>For each test case, you should output &ldquo;Case #C: &ldquo;. first, where C indicates the case number and counts from 1.</p>
+
+<p>Then output the answer, the value of that UNSIGNED 32-BIT INTEGER variable.</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Sample Input</div>
+<div class="panel_content">
+<div style="font-family: Courier New,Courier,monospace;">3 1 3 100</div>
+</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Sample Output</div>
+<div class="panel_content">
+<div style="font-family: Courier New,Courier,monospace;">Case #1: 1
+Case #2: 30
+Case #3: 15662489
+<div style="font-family: Times New Roman; font-size: 14px; background-color: f4fbff; border: #B7CBFF 1px dashed; padding: 6px;">
+<div style="font-family: Arial; font-weight: bold; color: #7ca9ed; border-bottom: #B7CBFF 1px dashed;"><em>Hint</em></div>
+In the second test case, there are six levels(1x1,1x2,1x3,2x2,2x3,3x3) Here is the details for this game: 1x1: 1(K=1); 1x2: 2(K=1); 1x3: 3(K=1); 2x2: 2(K=1), 4(K=2); 2x3: 6(K=1); 3x3: 3(K=1), 9(K=3); 1+2+3+2+4+6+3+9=30</div>
+_ _</div>
+</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Author</div>
+<div class="panel_content">UESTC</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Source</div>
+<div class="panel_content"><a href="http://acm.hdu.edu.cn/search.php?field=problem&amp;amp;key=2014%20Multi-University%20Training%20Contest%207&amp;amp;source=1&amp;amp;searchmode=source"> 2014 Multi-University Training Contest 7 </a></div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Recommend</div>
+<div class="panel_content">We have carefully selected several similar problems for you:  <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4943">4943</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4942">4942</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4941">4941</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4940">4940</a> <a href="http://acm.hdu.edu.cn/showproblem.php?pid=4939">4939</a></div>
+<div class="panel_content">N(LogN)的复杂度。</div></p>
+
+<pre><code class="language-C++">#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+using namespace std;
+#define N 500001
+unsigned int f[N];
+unsigned int g[N];
+int n;
+int main() {
+    int T;
+    for (int i = 1; i &amp;lt; N; i++) {
+        for (int j = 1; i * j &amp;lt; N; j++) {
+            g[i * j] += (1LL + j) * j / 2;
+        }
+    }
+    f[1] = 1;
+    for (int i = 2; i &amp;lt; N; i++) {
+        f[i] = f[i - 1] + i * g[i];
+    }
+    scanf(&quot;%d&quot;, &amp;amp;T);
+    for (int c = 1; c &amp;lt;= T; c++) {
+        scanf(&quot;%d&quot;, &amp;amp;n);
+        printf(&quot;Case #%d: %u\n&quot;, c, f[n]);
+    }
+}
+</code></pre>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/github-tips/" rel="prev">github使用札记</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/zjnu2082/" rel="next">内网2082 字母</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

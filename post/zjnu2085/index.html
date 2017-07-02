@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    内网 2085马农 | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/zjnu2085/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>内网 2085马农</h1>
+      <div class="meta">
+        Aug 14, 2014 &nbsp;
+        
+          #<a href="/tags/%E6%9A%B4%E5%8A%9B">暴力</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>##Description
+ 在观看完战马检阅之后，来自大草原的两兄弟决心成为超级“马农”，专门饲养战马。</p>
+
+<p>兄弟两回到草原，将可以养马的区域，分为N*N的单位面积的正方形，并实地进行考察，归纳出了每个单位面积可以养马所获得的收益。接下来就要开始规划他们各自的马场了。</p>
+
+<p>首先，两人的马场都必须是矩形区域。同时，为了方便两人互相照应，也为了防止马匹互相走散，规定两个马场的矩形区域相邻，且只有一个交点。最后，互不认输的两人希望两个马场的收益相当，这样才不会影响他们兄弟的感情。</p>
+
+<p>现在，兄弟两找到你这位设计师，希望你给他们设计马场，问共有多少种设计方案。
+
+##Input</p>
+
+<p>第一行一个整数N，表示整个草原的大小为N*N。</p>
+
+<p>接下来N行，每行N个整数A(i,j)，表示第i行第j列的单位草地的收成。（注意：收益可能是负数，养马也不是包赚的，马匹也可能出现生病死亡等意外。）</p>
+
+<p>1&lt;=N&lt;=50<br />
+-1000&lt;A(i,j)&lt;1000</p>
+
+<p>##Output</p>
+
+<p> 输出符合两人要求的草原分配方案数。</p>
+
+<p>##Sample Input</p>
+
+<p>3 1 2 3 4 5 6 7 8 9</p>
+
+<p>##Sample Output</p>
+
+<p>2</p>
+
+<p>##Hint</p>
+
+<p><img src="http://acm.zjnu.edu.cn/JudgeOnline/userfiles/images/2085.jpg" alt="" /></p>
+
+<p>##Source</p>
+
+<p>2014宁波初中 T2</p>
+
+<p><br/></p>
+
+<hr />
+
+<p>宁波镇海中学的罗方炜给我们组的一场比赛。</p>
+
+<p>此题主要靠技巧。枚举中心点，然后用数组hash。注意数组清空复杂度很大，每次清空必定超时。应该用一个栈来记录更改的地方，直接赋0.</p>
+
+<pre><code class="language-C++">#include&amp;lt;map&amp;gt;
+#include&amp;lt;set&amp;gt;
+#include&amp;lt;cmath&amp;gt;
+#include&amp;lt;stack&amp;gt;
+#include&amp;lt;queue&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;vector&amp;gt;
+#include&amp;lt;cctype&amp;gt;
+#include&amp;lt;cassert&amp;gt;
+#include&amp;lt;utility&amp;gt;
+#include&amp;lt;numeric&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+#include&amp;lt;algorithm&amp;gt;
+using namespace std;
+#define pr pair
+#define PR pair&amp;lt;int,int&amp;gt;
+#define MP make_pair
+#define SI(x) set&amp;lt;x&amp;gt;::iterator
+#define VI(x) vector&amp;lt;x&amp;gt;::iterator
+#define MI(x,y) map&amp;lt;x,y&amp;gt;::iterator
+#define SRI(x) set&amp;lt;x&amp;gt;::reverse_iterator
+#define VRI(x) vector&amp;lt;x&amp;gt;::reverse_iterator
+#define MRI(x,y) map&amp;lt;x,y&amp;gt;::reverse_iterator
+#define F first
+#define S second
+#define Sz(x) (int)x.size()
+#define clrQ(x) while(!x.empty)x.pop();
+#define clr(x,y) memset(x,y,sizeof(x));
+#if defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__)
+#define LL __int64
+#define LLS &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#else
+#define LL long long
+#define LLS &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#endif
+const int inf = ~0u &amp;gt;&amp;gt; 1;
+const LL lnf = ~0ull &amp;gt;&amp;gt; 1;
+/*start*/
+#define N 55
+#define M 2500000
+int f[N][N],a[N][N];
+int h[M&amp;lt;&amp;lt;1|1];
+int st[N*N],top;
+int n,m;
+int main(int argc, char **argv) {
+    while(~scanf(&quot;%d&quot;,&amp;amp;n)){
+        for (int i = 1; i &amp;lt;= n; ++i) {
+            for (int j = 1; j &amp;lt;= n; ++j) {
+                scanf(&quot;%d&quot;,&amp;amp;a[i][j]);
+                f[i][j]=f[i-1][j]+f[i][j-1]-f[i-1][j-1]+a[i][j];
+            }
+        }
+        int res=top=0;
+        for (int x = 1; x &amp;lt;= n; ++x) {
+            for (int y = 1; y &amp;lt;= n; ++y) {
+                for (int i = 1; i &amp;lt;= x; ++i) {
+                    for (int j = 1; j &amp;lt;= y; ++j) {
+                        st[top++]=f[x][y]-f[x][j-1]-f[i-1][y]+f[i-1][j-1]+M;
+                        h[st[top-1]]++;
+                    }
+                }
+                for (int i = x+1; i &amp;lt;= n; ++i) {
+                    for (int j = y+1; j &amp;lt;= n; ++j) {
+                        res+=h[f[i][j]-f[i][y]-f[x][j]+f[x][y]+M];
+                    }
+                }
+
+                while(top){
+                    h[st[--top]]=0;
+                }
+                for (int i = x; i &amp;lt;= n; ++i) {
+                    for (int j = 1; j &amp;lt;= y; ++j) {
+                        st[top++]=f[i][y]-f[x-1][y]-f[i][j-1]+f[x-1][j-1]+M;
+                        h[st[top-1]]++;
+                    }
+                }
+                for (int i = 1; i &amp;lt; x; ++i) {
+                    for (int j = y+1; j &amp;lt;= n; ++j) {
+                        res+=h[f[x-1][j]-f[x-1][y]-f[i-1][j]+f[i-1][y]+M];
+                    }
+                }
+                while(top){
+                    h[st[--top]]=0;
+                }
+            }
+        }
+        printf(&quot;%d\n&quot;,res);
+    }
+}
+
+</code></pre>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/zjnu2082/" rel="prev">内网2082 字母</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/hdu-2874-connections-between-cities/" rel="next">HDU 2874 Connections between cities</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    ZOJ month contest D.Determinant and Matrix | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/zoj-month-contest-d-determinant-and-matrix/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>ZOJ month contest D.Determinant and Matrix</h1>
+      <div class="meta">
+        Nov 8, 2014 &nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <hr />
+
+<p><center style="color: #000000;"><span style="color: green;">Time Limit: </span>2 Seconds      <span style="color: green;">Memory Limit: </span>65536 KB</center></p>
+
+<hr />
+
+<p>##Description
+Recently, LBH is learning the curse linear algebra. Thus he is very interested in matrix and determinant now. In order to practice his ability of solving the problem of linear algebra, he just invent some problems by himself. Once the problems was create, he would solve it immediately. However, he meet a problem that was so hard that he couldn&rsquo;t work out even though racked his brains. The problem was described as follow:</p>
+
+<p>To a integer martix M<sub>nn</sub>(a<sub>ij</sub>), we define two function add(M<sub>nn</sub>(a<sub>ij</sub>))=M<sub>nn</sub>(a<sub>ij</sub> + 1) and sub(M<sub>nn</sub>(a<sub>ij</sub>))=M<sub>nn</sub>(a<sub>ij</sub> - 1) which were exactly like this:
+
+<div style="color: #000000;"><img src="http://acm.zju.edu.cn/onlinejudge/showImage.do?name=DeterminantAndMatrixFig1.png" alt="DeterminantAndMatrixFig1" /></div>
+<div style="color: #000000;"><img src="http://acm.zju.edu.cn/onlinejudge/showImage.do?name=DeterminantAndMatrixFig2.png" alt="DeterminantAndMatrixFig2" /></div></p>
+
+<p>According to the martix M<sub>nn</sub>(a<sub>ij</sub>), we can permutate it and get a full permutation set Perm(M<sub>nn</sub>(a<sub>ij</sub>)) = {M<sub>nn</sub>(a<sub>I<sub>i</sub>J<sub>j</sub></sub>)| I and J is a permutation of 1..n }, (Perm(M) is a set, each matrix in Perm(M) is unique). For example:</p>
+
+<div style="color: #000000;">![DeterminantAndMatrixFig3](http://acm.zju.edu.cn/onlinejudge/showImage.do?name=DeterminantAndMatrixFig3.png)</div>
+
+<p>The problem is to get the result of a fomula about an integer matrix M<sub>nn</sub>:</p>
+
+<p><div style="color: #000000;"><img src="http://acm.zju.edu.cn/onlinejudge/showImage.do?name=DeterminantAndMatrixFig4.png" alt="DeterminantAndMatrixFig4" /></div>
+<span style="color: #000000;">in which the det(M) meaned to cacluate the determinant of M.</span></p>
+
+<h2 id="input">Input</h2>
+
+<p>There are several test cases.</p>
+
+<p>The first line contains an integer <var>T</var>(<var>T</var> ≤ 100) . Then <var>T</var> test cases follow.</p>
+
+<p>In each test case, the first line contains one integer <var>n</var>(0&lt; <var>n</var>≤ 10). The number means the giving matrix&rsquo;s size is <var>n×n</var></p>
+
+<p>Then there are <var>n</var> lines followed, each line contains <var>n</var> integers <var>a<sub>ij</sub></var>(-10≤ <var>a<sub>ij</sub></var>≤ 10), in the position row <var>i</var>, colum <var>j</var>, it represents the number <var>a<sub>ij</sub>.</var></p>
+
+<h2 id="output">Output</h2>
+
+<p>For each test case, since the result may be very large, output one line with the result modulo 2<sup>30</sup>.</p>
+
+<h2 id="sample-input">Sample Input</h2>
+
+<pre><code>1
+2
+1 1
+1 2
+</code></pre>
+
+<h4 id="sample-output">Sample Output</h4>
+
+<pre><code>2
+</code></pre>
+
+<p><span style="color: #000000;">Author: </span><strong>LIN, Binghui</strong>
+<span style="color: #000000;">Source: </span><strong>ZOJ Monthly, August 2014</strong></p>
+
+<p><br/></p>
+
+<hr />
+
+<p>这道题全场现场只A了一个人。今天我们比赛的时候我A了，挺爽的。</p>
+
+<pre><code class="language-Java">import java.util.Scanner;
+import java.math.*;
+public class Main {
+    static long fact[]=new long[15];
+    static long kind;
+    static int A[][]=new int[10][10];
+    static final BigInteger MOD=BigInteger.valueOf(1&amp;lt;&amp;lt;30);
+    static void getKind(int n){
+        boolean mark[]=new boolean[10];
+        for(int i,j,k,r=0;r&amp;lt;2;r++){
+            for (i = 0; i &amp;lt; n; ++ i) mark[i] = false;
+            for (i = 0; i &amp;lt; n; ++ i) {
+                if (mark[i]) continue;
+                int cnt = 0;
+                for (j = i; j &amp;lt; n; ++ j) {
+                    for (k = 0; k &amp;lt; n; ++ k) {
+                        if (r==1&amp;amp;&amp;amp;A[k][i] != A[k][j])break;
+                        if(r==0&amp;amp;&amp;amp;A[i][k] != A[j][k])break;
+                    }
+                    if (k == n) {
+                        ++ cnt;
+                        mark[j] = true;
+                    }
+                }
+                kind /= fact[cnt];
+            }
+        }
+    }
+    public static void main(String[] args){
+        Scanner cin=new Scanner(System.in);
+        int n,T=cin.nextInt();
+        fact[0]=1;
+        for(int i=1;i&amp;lt;=10;i++)fact[i]=fact[i-1]*i;
+        while(T--&amp;gt;0){
+            n=cin.nextInt();
+            for(int i=0;i&amp;lt;n;i++){
+                for(int j=0;j&amp;lt;n;j++){
+                    A[i][j]=cin.nextInt();
+                }
+            }
+            long res=0;
+            Matrix matrix=new Matrix(n);
+            kind=fact[n]*fact[n];
+            getKind(n);
+            if(kind%2==1){
+                matrix.valueOf(A, 0);
+                res=res ^(matrix.Det().mod(MOD).longValue());
+            }
+            matrix.valueOf(A, 1);
+            res=res^(matrix.Det().mod(MOD).longValue());
+            matrix.valueOf(A, -1);
+            res=res^(matrix.Det().mod(MOD).longValue());
+            System.out.println(res);
+        }
+        cin.close();
+    }
+}
+class Matrix{
+    BigInteger M[][]=new BigInteger[10][10];
+    BigInteger ZERO,ONE;
+    int n;
+    Matrix(int n){
+        this.n=n;
+        ZERO=BigInteger.ZERO;
+        ONE=BigInteger.ONE;
+    }
+    void valueOf(int A[][],int d){
+        for(int i=0;i&amp;lt;n;i++){
+            for(int j=0;j&amp;lt;n;j++){
+                M[i][j]=BigInteger.valueOf(A[i][j]+d);
+            }
+        }
+    }
+    BigInteger Det(){
+        BigInteger tmp, res = ONE, div = ONE;
+        int i, j, k;
+        for (i = 0; i &amp;lt; n; ++ i) {
+            for (j = i; j &amp;lt; n; ++ j) {
+                if (!M[j][i].equals(ZERO)) break;
+            }
+            if (j == n) return ZERO;
+            if (j != i) {
+                //res = res.negate();
+                for (k = 0; k &amp;lt; n; ++ k) {
+                    tmp = M[j][k];
+                    M[j][k] = M[i][k];
+                    M[i][k] = tmp;
+                }
+            }
+            res = res.multiply(M[i][i]);
+            for (j = i + 1; j &amp;lt; n; ++ j) {
+                if (M[j][i].equals(ZERO)) continue;
+                div = div.multiply(M[i][i]);
+                for (k = i + 1; k &amp;lt; n; ++ k) {
+                    M[j][k] = M[j][k].multiply(M[i][i]).subtract(M[i][k].multiply(M[j][i]));
+                }
+            }
+        }
+        res = res.divide(div);
+        if (res.compareTo(ZERO) &amp;lt; 0) res = res.negate();
+        return res;
+    }
+}
+</code></pre>
+
+<p></pre></p>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/fft-thoughts/" rel="prev">FFT求快速卷积的思考</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/asp-net-mvc4-note1-simplemembership/" rel="next">ASP.NET MVC4笔记（一） 扩展Simplemembership</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

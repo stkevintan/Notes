@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    优化Wine程序的字体显示 | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stkevintan.github.io/nblog/post/wine-font-config/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="https://stkevintan.github.io/nblog/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="https://stkevintan.github.io/nblog/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>优化Wine程序的字体显示</h1>
+      <div class="meta">
+        Oct 13, 2014 &nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>默认Wine的字体太难看，而且有时候还会显示不出来。开启Wine字体的反锯齿及平滑功能以及将字体映射成文泉驿微米黑的方法是：</p>
+
+<p>1.新建文本文件a.reg，放入如下内容：
+</p>
+
+<pre><code class="language-language">REGEDIT4
+
+[HKEY_CURRENT_USER\Software\Wine\X11 Driver]
+&quot;ClientSideAntiAliasWithCore&quot;=&quot;Y&quot;
+&quot;ClientSideAntiAliasWithRender&quot;=&quot;Y&quot;
+&quot;ClientSideWithRender&quot;=&quot;Y&quot;
+
+[HKEY_CURRENT_USER\Control Panel\Desktop]
+&quot;FontSmoothing&quot;=&quot;2&quot;
+&quot;FontSmoothingType&quot;=dword:00000002
+&quot;FontSmoothingGamma&quot;=dword:00000578
+&quot;FontSmoothingOrientation&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
+&quot;Arial Baltic,186&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Arial CE,238&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Arial CYR,204&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Arial Greek,161&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Arial TUR,162&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Courier New Baltic,186&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Courier New CE,238&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Courier New CYR,204&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Courier New Greek,161&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Courier New TUR,162&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Helv&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Helvetica&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;MS Shell Dlg&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;MS Shell Dlg 2&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Tahoma&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Times&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Times New Roman Baltic,186&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Times New Roman CE,238&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Times New Roman CYR,204&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Times New Roman Greek,161&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Times New Roman TUR,162&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Tms Rmn&quot;=&quot;WenQuanYi Micro Hei&quot;
+&quot;Simsun&quot;=&quot;WenQuanYi Micro Hei&quot;
+</code></pre>
+
+<p>2.如果是普通的wine直接终端输入wine regedit打开注册表编辑器。然后点击“注册表—&gt;导入注册表文件&rdquo;导入该文件。</p>
+
+<p>3.如果是longene等封装好的wine（比如tm2013）可以使用tm2013 -reg命令打开注册表。</p>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="https://stkevintan.github.io/nblog/post/sublime-config-web/" rel="prev">用Sublime Text 3 dev 做网页开发的配置</a></span>
+    
+    
+      <span class="next"><a href="https://stkevintan.github.io/nblog/post/acm-international-collegiate-programming-contest-asia-regional-contest-tokyo-problem-d-space-golf/" rel="next">ACM International Collegiate Programming Contest Asia Regional Contest, Tokyo Problem D Space Golf</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+
