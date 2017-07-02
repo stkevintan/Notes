@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Git on World of Forks</title>
-    <link>http://example.org/categories/git/</link>
+    <link>https://stkevintan.github.io/nblog/categories/git/</link>
     <description>Recent content in Git on World of Forks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 10 Aug 2014 21:01:03 +0800</lastBuildDate>
     
-	<atom:link href="http://example.org/categories/git/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://stkevintan.github.io/nblog/categories/git/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>github使用札记</title>
-      <link>http://example.org/post/github-tips/</link>
+      <link>https://stkevintan.github.io/nblog/post/github-tips/</link>
       <pubDate>Sun, 10 Aug 2014 21:01:03 +0800</pubDate>
       
-      <guid>http://example.org/post/github-tips/</guid>
+      <guid>https://stkevintan.github.io/nblog/post/github-tips/</guid>
       <description>&lt;ol&gt;
 &lt;li&gt;&lt;p&gt;生成ssh key:
     ssh-keygen -t rsa -C &amp;ldquo;stkevintan@foxmail.com&amp;rdquo;&lt;/p&gt;
