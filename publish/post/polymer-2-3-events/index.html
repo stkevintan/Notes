@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    Polymer 2.0 文档笔记(3) Events | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://example.org/post/polymer-2-3-events/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="http://example.org/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="http://example.org/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://example.org/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>Polymer 2.0 文档笔记(3) Events</h1>
+      <div class="meta">
+        Jul 2, 2017 &nbsp;
+        
+          #<a href="/tags/polymer">Polymer</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<h2 id="normal-events">Normal Events</h2>
+
+<blockquote>
+<p>Polymer elements can use the standard DOM APIs for creating, dispatching, and listening for events.
+Polymer also provides annotated event listeners, which allow you to specify event listeners declaratively as part of the element&rsquo;s DOM template.</p>
+</blockquote>
+
+<h3 id="add-annotated-event-listeners">Add annotated event listeners</h3>
+
+<p>这个其实就是在标签上使用on-event属性。</p>
+
+<pre><code class="language-html">&lt;dom-module id=&quot;x-custom&quot;&gt; 
+  &lt;template&gt; 
+    &lt;button on-click=&quot;handleClick&quot;&gt;Kick Me&lt;/button&gt; 
+  &lt;/template&gt; 
+  &lt;script&gt; 
+    class XCustom extends Polymer.Element { 
+ 
+static get is() {return 'x-custom'} 
+ 
+handleClick() { 
+console.log('Ow!'); 
+} 
+} 
+customElements.define(XCustom.is, XCustom); 
+     &lt;/script&gt; 
+&lt;/dom-module&gt; 
+</code></pre>
+
+<p>需要注意的有：
+1. 如果添加了手势事件则应当使用<code>on-tap</code>事件代替<code>on-click</code>事件，提供更好的移动浏览器支持。
+2. 因为html属性的限制，所有的事件名称都将转化为小写字母。(To avoid confusion, always use lowercase event names. )</p>
+
+<h3 id="add-and-remove-listeners-imperatively">Add and remove listeners imperatively</h3>
+
+<p>直接使用原生的<code>addEventListener</code>和<code>removeEventListener</code></p>
+
+<h3 id="fire-custom-events">Fire custom events</h3>
+
+<p>直接使用原生的<code>CustomEvent</code>和<code>dispatchEvent</code></p>
+
+<h2 id="event-retargeting">Event Retargeting</h2>
+
+<ol>
+<li>为了保持ShadowDOM的隐蔽性。元素内部ShadowDOM触发的一些事件在网上传播时会将target重定向到当前元素。</li>
+<li><code>event.composedPath()</code> : 包含事件传递过程中所经过的nodes路径列表。 </li>
+</ol>
+
+<p>自定义的事件默认无法穿透ShadowDOM边界。可以如下设置：</p>
+
+<pre><code class="language-javascript">var event = new CustomEvent('my-event', {bubbles: true, composed: true});
+</code></pre>
+
+<h2 id="gesture-events">Gesture Events</h2>
+
+<p>手势事件的支持是基于Legacy Element的，如果使用Polymer2的class风格定义需要使用mixin:<code>Polymer.GestureEventListeners</code></p>
+
+<pre><code class="language-html">&lt;link rel=&quot;import&quot; href=&quot;polymer/lib/mixins/gesture-event-listeners.html&quot;&gt; 
+ 
+&lt;script&gt; 
+    class TestEvent extends Polymer.GestureEventListeners(Polymer.Element) { 
+      ... 
+&lt;/script&gt; 
+</code></pre>
+
+<p>注册事件也有两种方式：
+1. 支持on-event形式的声明方式
+2. 显示定义的方式：<code>Polymer.Gestures.addListener(this, 'tap', e =&gt; this.tapHandler(e));</code></p>
+
+<p>包含以下几种手势事件，包含在e.detail中。
+- down—finger/button went down
+  - <code>x</code>—clientX coordinate for event
+  - <code>y</code>—clientY coordinate for event
+  - <code>sourceEvent</code>—the original DOM event that caused the down action
+- up—finger/button went up
+  - <code>x</code>—clientX coordinate for event
+  - <code>y</code>—clientY coordinate for event
+  - <code>sourceEvent</code>—the original DOM event that caused the up action
+- tap—down &amp; up occurred
+  - <code>x</code>—clientX coordinate for event
+  - <code>y</code>—clientY coordinate for event
+  - <code>sourceEvent</code>—the original DOM event that caused the tap action
+- track—moving while finger/button is down
+  - <code>state</code>—a string indicating the tracking state:
+    - <code>start</code>—fired when tracking is first detected (finger/button down and moved past a pre-set distance threshold)
+    - <code>track</code>—fired while tracking
+    - <code>end</code>—fired when tracking ends
+  - <code>x</code>—clientX coordinate for event
+  - <code>y</code>—clientY coordinate for event
+  - <code>dx</code>—change in pixels horizontally since the first track event
+  - <code>dy</code>—change in pixels vertically since the first track event
+  - <code>ddx</code>—change in pixels horizontally since last track event
+  - <code>ddy</code>—change in pixels vertically since last track event
+  - <code>hover()</code>-a function that may be called to determine the element currently being hovered</p>
+
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="http://example.org/post/polymer-2-2-shadowdom/" rel="prev">Polymer 2.0 文档笔记(2) ShadowDOM</a></span>
+    
+    
+      <span class="next"><a href="http://example.org/post/polymer-2-4-data-system/" rel="next">Polymer 2.0 文档笔记(4) Data System</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

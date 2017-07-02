@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>生活 on World of Forks</title>
+    <link>http://example.org/categories/%E7%94%9F%E6%B4%BB/</link>
+    <description>Recent content in 生活 on World of Forks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 18 Aug 2014 09:24:58 +0800</lastBuildDate>
+    
+	<atom:link href="http://example.org/categories/%E7%94%9F%E6%B4%BB/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>tired</title>
+      <link>http://example.org/post/_tired/</link>
+      <pubDate>Mon, 18 Aug 2014 09:24:58 +0800</pubDate>
+      
+      <guid>http://example.org/post/_tired/</guid>
+      <description>原来自己也会累。无止境的疯狂无非是想让自己忘记。可往往总是徒劳。如果休息时光比工作时光更累，那休息时光又有何意义？为了逃避对你的思念换来的是</description>
+    </item>
+    
+  </channel>
+</rss>

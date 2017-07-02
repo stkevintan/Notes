@@ -1,0 +1,11 @@
+baseURL = "http://example.org/"
+languageCode = "zh-cn"
+title = "World of Forks"
+disqusShortname = 'keyin'
+publishDir = "publish"
+# if true, auto-detect Chinese/Japanese/Korean Languages in the content. (.Summary and .WordCount can work properly in CJKLanguage)
+hasCJKLanguage= true
+theme = 'angels-ladder'
+[Params]
+  Author = "Kevin Tan"
+  subtitle = "Tempora mutantur, nos et mutamur in illis ..."

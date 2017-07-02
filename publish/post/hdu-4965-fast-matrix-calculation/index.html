@@ -1,0 +1,559 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    HDU 4965 Fast Matrix Calculation | World of Forks
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://example.org/post/hdu-4965-fast-matrix-calculation/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="http://example.org/index.xml" rel="alternate" type="application/rss+xml" title="World of Forks" />
+  <link href="http://example.org/index.xml" rel="feed" type="application/rss+xml" title="World of Forks" />
+
+  
+  
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://example.org/">World of Forks</a></h1>
+        <h2>Tempora mutantur, nos et mutamur in illis ...</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>HDU 4965 Fast Matrix Calculation</h1>
+      <div class="meta">
+        Aug 20, 2014 &nbsp;
+        
+          #<a href="/tags/%E7%9F%A9%E9%98%B5%E6%9A%B4%E5%8A%9B">[矩阵,暴力]</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p><strong><span style="font-family: Arial; font-size: 12px; font-weight: bold; color: green;">Time Limit: <sup>2000</sup>&frasl;<sub>1000</sub> MS (Java/Others)    Memory Limit: <sup>131072</sup>&frasl;<sub>131072</sub> K (Java/Others)
+Total Submission(s): 206    Accepted Submission(s): 116
+</span></strong>
+<div class="panel_title" align="left">Problem Description</div>
+<div class="panel_content"></p>
+
+<p>One day, Alice and Bob felt bored again, Bob knows Alice is a girl who loves math and is just learning something about matrix, so he decided to make a crazy problem for her.</p>
+
+<p>Bob has a six-faced dice which has numbers 0, 1, 2, 3, 4 and 5 on each face. At first, he will choose a number N (4 &lt;= N &lt;= 1000), and for N times, he keeps throwing his dice for K times (2 &lt;=K &lt;= 6) and writes down its number on the top face to make an N*K matrix A, in which each element is not less than 0 and not greater than 5. Then he does similar thing again with a bit difference: he keeps throwing his dice for N times and each time repeat it for K times to write down a K*N matrix B, in which each element is not less than 0 and not greater than 5. With the two matrix A and B formed, Alice’s task is to perform the following 4-step calculation.
+
+Step 1: Calculate a new N*N matrix C = A*B.
+Step 2: Calculate M = C^(N*N).
+Step 3: For each element x in M, calculate x % 6. All the remainders form a new matrix M’.
+Step 4: Calculate the sum of all the elements in M’.</p>
+
+<p>Bob just made this problem for kidding but he sees Alice taking it serious, so he also wonders what the answer is. And then Bob turn to you for help because he is not good at math.</p>
+
+<p></div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Input</div>
+<div class="panel_content"></p>
+
+<p>The input contains several test cases. Each test case starts with two integer N and K, indicating the numbers N and K described above. Then N lines follow, and each line has K integers between 0 and 5, representing matrix A. Then K lines follow, and each line has N integers between 0 and 5, representing matrix B.</p>
+
+<p>The end of input is indicated by N = K = 0.</p>
+
+<p></div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Output</div>
+<div class="panel_content">For each case, output the sum of all the elements in M’ in a line.</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Sample Input</div>
+<div class="panel_content">
+<div style="font-family: Courier New,Courier,monospace;">4 2 5 5 4 4 5 4 0 0 4 2 5 5 1 3 1 5 6 3 1 2 3 0 3 0 2 3 4 4 3 2 2 5 5 0 5 0 3 4 5 1 1 0 5 3 2 3 3 2 3 1 5 4 5 2 0 0</div>
+</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Sample Output</div>
+<div class="panel_content">
+<div style="font-family: Courier New,Courier,monospace;">14 56</div>
+</div>
+<div class="panel_bottom"></div>
+&nbsp;
+<div class="panel_title" align="left">Source</div>
+<div class="panel_content"><a href="http://acm.hdu.edu.cn/search.php?field=problem&amp;amp;key=2014%20Multi-University%20Training%20Contest%209&amp;amp;source=1&amp;amp;searchmode=source"> 2014 Multi-University Training Contest 9 </a></div>
+<br/></p>
+
+<hr />
+
+<p><div class="panel_content">这题让我注意了矩阵模板的开销问题。1000X1000多次调用就会爆内存了。下面是用动态数组写的。效率非常慢，难以接受。</div></p>
+
+<pre><code class="language-C++">#include&amp;lt;map&amp;gt;
+#include&amp;lt;set&amp;gt;
+#include&amp;lt;cmath&amp;gt;
+#include&amp;lt;stack&amp;gt;
+#include&amp;lt;queue&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;vector&amp;gt;
+#include&amp;lt;cctype&amp;gt;
+#include&amp;lt;cassert&amp;gt;
+#include&amp;lt;utility&amp;gt;
+#include&amp;lt;numeric&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+#include&amp;lt;algorithm&amp;gt;
+using namespace std;
+#define pr pair
+#define PR pair&amp;lt;int,int&amp;gt;
+#define MP make_pair
+#define SI(x) set&amp;lt;x&amp;gt;::iterator
+#define VI(x) vector&amp;lt;x&amp;gt;::iterator
+#define MI(x,y) map&amp;lt;x,y&amp;gt;::iterator
+#define SRI(x) set&amp;lt;x&amp;gt;::reverse_iterator
+#define VRI(x) vector&amp;lt;x&amp;gt;::reverse_iterator
+#define MRI(x,y) map&amp;lt;x,y&amp;gt;::reverse_iterator
+#define F first
+#define S second
+#define Sz(x) (int)x.size()
+#define clrQ(x) while(!x.empty)x.pop();
+#define clr(x,y) memset(x,y,sizeof(x));
+#if defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__)
+#define LL __int64
+#define LLS &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#else
+#define LL long long
+#define LLS &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#endif
+const int inf = ~0u &amp;gt;&amp;gt; 1;
+const LL lnf = ~0ull &amp;gt;&amp;gt; 1;
+/*start*/
+#define MOD 6
+int n, k;
+struct Matrix {
+    int n, m;
+    int** M;
+    Matrix(int n, int m) :n(n), m(m) {
+        M = new int*[n];
+        for (int i = 0; i &amp;lt; n; i++)
+            M[i] = new int[m];
+    }
+
+    Matrix(int n, int m, int k) :
+            n(n), m(m) {
+        M = new int*[n];
+        for (int i = 0; i &amp;lt; n; i++)
+            M[i] = new int[m];
+        Init(k);
+    }
+
+    ~Matrix() {
+        if (M) {
+            for (int i = 0; i &amp;lt; n; i++) {
+                if (M[i]) {
+                    delete[] M[i];
+                    M[i] = NULL;
+                }
+            }
+            delete[] M;
+            M = NULL;
+        }
+    }
+
+    void Init(bool k) { //k=1 返回单位矩阵，k=0 返回零矩阵
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++)
+                M[i][j] = k * (i == j);
+    }
+
+    void out() {
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++)
+                printf(&quot;%d%c&quot;, M[i][j], j == m - 1 ? '\n' : ' ');
+    }
+
+    Matrix &amp;amp; operator=(const Matrix&amp;amp; othr) {
+        this-&amp;gt;~Matrix();
+        n = othr.n;
+        m = othr.m;
+        M = new int*[n];
+        for (int i = 0; i &amp;lt; n; i++)
+            M[i] = new int[m];
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; m; j++) {
+                M[i][j] = othr.M[i][j];
+            }
+        }
+        return *this;
+    }
+
+    Matrix(const Matrix &amp;amp; othr) {
+        n = othr.n;
+        m = othr.m;
+        M = new int*[n];
+        for (int i = 0; i &amp;lt; n; i++)
+            M[i] = new int[m];
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; m; j++) {
+                M[i][j] = othr.M[i][j];
+            }
+        }
+    }
+
+    bool operator==(const Matrix&amp;amp; othr) const {
+        if (n - othr.n || m - othr.m) return false;
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; m; j++) {
+                if (M[i][j] != othr.M[i][j]) return false;
+            }
+        }
+        return true;
+    }
+    Matrix operator *(const Matrix&amp;amp; othr) const {
+        if (m - othr.n) exit(1); //异常退出
+        Matrix ans(n, othr.m, 0);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; othr.m; j++)
+                for (int k = 0; k &amp;lt; m; k++) {
+                    ans.M[i][j] += M[i][k] * othr.M[k][j] % MOD;
+                    if (ans.M[i][j] &amp;gt;= MOD) ans.M[i][j] -= MOD;
+                    if (ans.M[i][j] &amp;lt; 0) ans.M[i][j] += MOD;
+                }
+        return ans;
+    }
+    Matrix operator *(const int&amp;amp; x) const {
+        Matrix ans(n, m);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++)
+                ans.M[i][j] = M[i][j] * x % MOD;
+        return ans;
+    }
+    Matrix operator +(const Matrix &amp;amp; othr) const {
+        if (n - othr.n || m - othr.m) exit(1);
+        Matrix ans(n, m);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++) {
+                ans.M[i][j] = M[i][j] + othr.M[i][j];
+                if (ans.M[i][j] &amp;gt;= MOD) ans.M[i][j] -= MOD;
+                if (ans.M[i][j] &amp;lt; 0) ans.M[i][j] += MOD;
+            }
+        return ans;
+    }
+
+    Matrix operator -(const Matrix&amp;amp; othr) const {
+        if (n - othr.n || m - othr.m) exit(1);
+        Matrix ans(n, m);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++) {
+                ans.M[i][j] = M[i][j] - othr.M[i][j];
+                if (ans.M[i][j] &amp;gt;= MOD) ans.M[i][j] -= MOD;
+                if (ans.M[i][j] &amp;lt; 0) ans.M[i][j] += MOD;
+            }
+        return ans;
+    }
+
+    Matrix operator ^(int x) const {
+        if (n - m) exit(1);
+        Matrix ans(n, m, 1), base = *this;
+        while (x &amp;gt; 0) {
+            if (x &amp;amp; 1) ans = ans * base;
+            base = base * base;
+            x &amp;gt;&amp;gt;= 1;
+        }
+        return ans;
+    }
+};
+
+int main(int argc, char **argv) {
+    while (~scanf(&quot;%d%d&quot;, &amp;amp;n, &amp;amp;k)) {
+        if (n == 0 &amp;amp;&amp;amp; k == 0) break;
+        Matrix A(n, k, 0), B(k, n, 0);
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; k; j++) {
+                scanf(&quot;%d&quot;, &amp;amp;A.M[i][j]);
+            }
+        }
+        for (int i = 0; i &amp;lt; k; i++) {
+            for (int j = 0; j &amp;lt; n; j++) {
+                scanf(&quot;%d&quot;, &amp;amp;B.M[i][j]);
+            }
+        }
+        Matrix mat = B * A;
+        int r = n * n - 1;
+        Matrix res = A * (mat ^ r) * B;
+        int ans = 0;
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; n; j++) {
+                ans += res.M[i][j];
+            }
+        }
+        printf(&quot;%d\n&quot;, ans);
+    }
+}
+</code></pre>
+
+<p>然后又试了试vector，虽然简单不少，但是仍然很慢：</p>
+
+<pre><code class="language-C++">#include&amp;lt;map&amp;gt;
+#include&amp;lt;set&amp;gt;
+#include&amp;lt;cmath&amp;gt;
+#include&amp;lt;stack&amp;gt;
+#include&amp;lt;queue&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;cstdio&amp;gt;
+#include&amp;lt;vector&amp;gt;
+#include&amp;lt;cctype&amp;gt;
+#include&amp;lt;cassert&amp;gt;
+#include&amp;lt;utility&amp;gt;
+#include&amp;lt;numeric&amp;gt;
+#include&amp;lt;cstring&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+#include&amp;lt;algorithm&amp;gt;
+using namespace std;
+#define pr pair
+#define PR pair&amp;lt;int,int&amp;gt;
+#define MP make_pair
+#define SI(x) set&amp;lt;x&amp;gt;::iterator
+#define VI(x) vector&amp;lt;x&amp;gt;::iterator
+#define MI(x,y) map&amp;lt;x,y&amp;gt;::iterator
+#define SRI(x) set&amp;lt;x&amp;gt;::reverse_iterator
+#define VRI(x) vector&amp;lt;x&amp;gt;::reverse_iterator
+#define MRI(x,y) map&amp;lt;x,y&amp;gt;::reverse_iterator
+#define F first
+#define S second
+#define Sz(x) (int)x.size()
+#define clrQ(x) while(!x.empty)x.pop();
+#define clr(x,y) memset(x,y,sizeof(x));
+#if defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__)
+#define LL __int64
+#define LLS &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;I&quot; &quot;6&quot; &quot;4&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#else
+#define LL long long
+#define LLS &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;d&quot;
+#define LLU &quot;%&quot; &quot;l&quot; &quot;l&quot; &quot;u&quot;
+#define LL_MAX _I64_MAX
+#endif
+const int inf = ~0u &amp;gt;&amp;gt; 1;
+const LL lnf = ~0ull &amp;gt;&amp;gt; 1;
+/*start*/
+#define MOD 6
+int n, k;
+struct Matrix {
+    int n, m;
+    vector&amp;lt;vector&amp;lt;int&amp;gt; &amp;gt;M;
+    Matrix(int n, int m) :n(n), m(m) {
+        alloc();
+    }
+
+    Matrix(int n, int m, int k) :
+            n(n), m(m) {
+        alloc();
+        Init(k);
+    }
+    void alloc(){
+        M.resize(n);
+        for (int i = 0; i &amp;lt; n; i++)
+            M[i].resize(m);
+    }
+
+    void Init(bool k) { //k=1 返回单位矩阵，k=0 返回零矩阵
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++)
+                M[i][j] = k * (i == j);
+    }
+
+    void out() {
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++)
+                printf(&quot;%d%c&quot;, M[i][j], j == m - 1 ? '\n' : ' ');
+    }
+
+    bool operator==(const Matrix&amp;amp; othr) const {
+        if (n - othr.n || m - othr.m) return false;
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; m; j++) {
+                if (M[i][j] != othr.M[i][j]) return false;
+            }
+        }
+        return true;
+    }
+    Matrix operator *(const Matrix&amp;amp; othr) const {
+        if (m - othr.n) exit(1); //异常退出
+        Matrix ans(n, othr.m, 0);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; othr.m; j++)
+                for (int k = 0; k &amp;lt; m; k++) {
+                    ans.M[i][j] += M[i][k] * othr.M[k][j] % MOD;
+                    if (ans.M[i][j] &amp;gt;= MOD) ans.M[i][j] -= MOD;
+                    if (ans.M[i][j] &amp;lt; 0) ans.M[i][j] += MOD;
+                }
+        return ans;
+    }
+    Matrix operator *(const int&amp;amp; x) const {
+        Matrix ans(n, m);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++)
+                ans.M[i][j] = M[i][j] * x % MOD;
+        return ans;
+    }
+    Matrix operator +(const Matrix &amp;amp; othr) const {
+        if (n - othr.n || m - othr.m) exit(1);
+        Matrix ans(n, m);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++) {
+                ans.M[i][j] = M[i][j] + othr.M[i][j];
+                if (ans.M[i][j] &amp;gt;= MOD) ans.M[i][j] -= MOD;
+                if (ans.M[i][j] &amp;lt; 0) ans.M[i][j] += MOD;
+            }
+        return ans;
+    }
+
+    Matrix operator -(const Matrix&amp;amp; othr) const {
+        if (n - othr.n || m - othr.m) exit(1);
+        Matrix ans(n, m);
+        for (int i = 0; i &amp;lt; n; i++)
+            for (int j = 0; j &amp;lt; m; j++) {
+                ans.M[i][j] = M[i][j] - othr.M[i][j];
+                if (ans.M[i][j] &amp;gt;= MOD) ans.M[i][j] -= MOD;
+                if (ans.M[i][j] &amp;lt; 0) ans.M[i][j] += MOD;
+            }
+        return ans;
+    }
+
+    Matrix operator ^(int x) const {
+        if (n - m) exit(1);
+        Matrix ans(n, m, 1), base = *this;
+        while (x &amp;gt; 0) {
+            if (x &amp;amp; 1) ans = ans * base;
+            base = base * base;
+            x &amp;gt;&amp;gt;= 1;
+        }
+        return ans;
+    }
+};
+
+int main(int argc, char **argv) {
+    while (~scanf(&quot;%d%d&quot;, &amp;amp;n, &amp;amp;k)) {
+        if (n == 0 &amp;amp;&amp;amp; k == 0) break;
+        Matrix A(n, k, 0), B(k, n, 0);
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; k; j++) {
+                scanf(&quot;%d&quot;, &amp;amp;A.M[i][j]);
+            }
+        }
+        for (int i = 0; i &amp;lt; k; i++) {
+            for (int j = 0; j &amp;lt; n; j++) {
+                scanf(&quot;%d&quot;, &amp;amp;B.M[i][j]);
+            }
+        }
+        Matrix mat = B * A;
+        int r = n * n - 1;
+        Matrix res = A * (mat ^ r) * B;
+        int ans = 0;
+        for (int i = 0; i &amp;lt; n; i++) {
+            for (int j = 0; j &amp;lt; n; j++) {
+                ans += res.M[i][j];
+            }
+        }
+        printf(&quot;%d\n&quot;, ans);
+    }
+}
+</code></pre>
+
+<p>感觉其他方法还比较麻烦。算了就这样吧~</p>
+
+<p>&nbsp;</p>
+      
+      
+      
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'keyin';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  <nav class="pagination-single">
+    
+      <span class="previous">&larr; <a href="http://example.org/post/_tired/" rel="prev">tired</a></span>
+    
+    
+      <span class="next"><a href="http://example.org/post/sublime-config-web/" rel="next">用Sublime Text 3 dev 做网页开发的配置</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+
